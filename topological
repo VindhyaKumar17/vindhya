@@ -1,0 +1,46 @@
+class Graph:
+    def __init__(self):
+        self.graph = {}
+        self.directed = True  # Set to True for directed graph
+
+    def AddVertex(self, vertex):
+        if vertex not in self.graph:
+            self.graph[vertex] = []
+
+    def AddEdge(self, src, dest):
+        self.AddVertex(src)
+        self.AddVertex(dest)
+        self.graph[src].append(dest)
+        if not self.directed:
+            self.graph[dest].append(src)
+
+    def displayGraph(self):
+        for vertex in self.graph:
+            print(f"{vertex}->{self.graph[vertex]}")
+
+    def topologicalSort(self):
+        visited = set()
+        stack = []
+        def dfs(vertex):
+            visited.add(vertex)
+            for neighbor in self.graph[vertex]:
+                if neighbor not in visited:
+                    dfs(neighbor)
+            stack.append(vertex)
+        for vertex in self.graph:
+            if vertex not in visited:
+                dfs(vertex)
+        return stack[::-1]
+G = Graph()
+G.AddEdge('A', 'B')
+G.AddEdge('A', 'C')
+G.AddEdge('A', 'D')
+G.AddEdge('B', 'D')
+G.AddEdge('C', 'F')
+G.AddEdge('C', 'D')
+G.AddEdge('D', 'E')
+G.AddEdge('E', 'F')
+print("Graph:")
+G.displayGraph()
+print("\nTopological Sort:")
+print(G.topologicalSort())
